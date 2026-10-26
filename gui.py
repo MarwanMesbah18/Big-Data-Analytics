@@ -32,6 +32,7 @@ async function run() {
             + "&k=" + encodeURIComponent(document.getElementById("k").value);
   document.getElementById("out").textContent = await (await fetch(url)).text();
 }
+document.addEventListener("keydown", (e) => { if (e.key === "Enter") run(); });  // Enter = Run
 </script></body></html>""" % "".join(f"<option>{name}</option>" for name in TASKS)
 
 
