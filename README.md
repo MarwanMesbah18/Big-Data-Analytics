@@ -23,4 +23,4 @@ Each task is in its own folder, written in Python 3 (standard library only) and 
 
 ## Optional GUI
 
-`python3 gui.py` opens a small window: choose a task, press **Run**, and the output appears in the box (for Top-K, type K first).
+`python3 gui.py` opens a page in your browser (http://localhost:8000): choose a task, press **Run**, and the output appears in the box (for Top-K, type K first). Stop it with Ctrl+C.
