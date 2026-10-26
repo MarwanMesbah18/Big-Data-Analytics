@@ -2,6 +2,9 @@
 
 Run: `python3 word-count/word_count.py` (from the repo root)
 
+Parallel: each file is mapped in its own thread (`ThreadPoolExecutor`), reducers also run in parallel threads.
+The terminal shows which thread read which file.
+
 - **Mapper:** lowercases each line, removes punctuation, emits `(word, 1)` per word.
 - **Shuffle:** groups all the 1s under their word.
 - **Reducer:** sums the 1s for each word.

@@ -13,7 +13,7 @@
 
 ## Tasks
 
-Each task is in its own folder, written in Python 3 (standard library only) and simulates MapReduce: map -> shuffle -> reduce.
+Each task is in its own folder, written in Python 3 (standard library only) and implements MapReduce (map -> shuffle -> reduce) with real parallel threads (`concurrent.futures.ThreadPoolExecutor`): one thread maps each file, and the reducers run in parallel threads. Each map thread prints its name to the terminal.
 
 | Folder | Task | Run |
 |---|---|---|

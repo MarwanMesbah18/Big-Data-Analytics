@@ -1,7 +1,10 @@
-"""Top-K Words: word count with MapReduce, then keep the K most frequent."""
+"""Top-K Words with real parallel MapReduce, then keep the K most frequent.
+Each file is mapped by its own thread, and the reducers also run in parallel threads."""
 import os
 import re
 import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor  # real OS threads (standard library)
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "datasets", "text-files")
 
@@ -12,6 +15,16 @@ def mapper(line):
         yield word, 1
 
 
+def map_file(path):
+    """Runs in a worker thread: apply the mapper to every line of one file."""
+    print(f"[map]    thread {threading.current_thread().name} reads {os.path.basename(path)}", file=sys.stderr)
+    pairs = []
+    with open(path) as f:
+        for line in f:
+            pairs.extend(mapper(line))
+    return pairs
+
+
 def shuffle(pairs):
     """Group all values by key."""
     groups = {}
@@ -20,22 +33,23 @@ def shuffle(pairs):
     return groups
 
 
-def reducer(word, counts):
-    """Sum the counts of one word."""
+def reducer(item):
+    """Runs in a worker thread: sum the counts of one word."""
+    word, counts = item
     return word, sum(counts)
 
 
 def main():
     k = int(sys.argv[1]) if len(sys.argv) > 1 else 10  # K from command line, default 10
 
-    pairs = []
-    for name in sorted(os.listdir(DATA_DIR)):
-        if name.startswith("book_") and name.endswith(".txt"):
-            with open(os.path.join(DATA_DIR, name)) as f:
-                for line in f:
-                    pairs.extend(mapper(line))
+    files = [os.path.join(DATA_DIR, n) for n in sorted(os.listdir(DATA_DIR))
+             if n.startswith("book_") and n.endswith(".txt")]
 
-    counts = [reducer(w, c) for w, c in shuffle(pairs).items()]
+    with ThreadPoolExecutor(max_workers=len(files)) as pool:
+        per_file_pairs = list(pool.map(map_file, files))            # map, in parallel
+        all_pairs = [pair for pairs in per_file_pairs for pair in pairs]
+        groups = shuffle(all_pairs)                           # shuffle
+        counts = list(pool.map(reducer, sorted(groups.items())))    # reduce, in parallel
 
     # Sort by count (high first); ties are broken alphabetically
     counts.sort(key=lambda item: (-item[1], item[0]))
