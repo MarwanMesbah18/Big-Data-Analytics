@@ -151,6 +151,7 @@ Why a browser and not a desktop window? The Tkinter version rendered blank on th
 - Each task script reads its folder from `DATA_DIR = os.environ.get("DATA_DIR") or <sample folder>`. If the environment variable `DATA_DIR` is set, the script uses that folder, otherwise the sample files.
 - In the GUI, text pasted in the "Custom data" box is split on lines containing `---`. `run_script` writes each part to `book_1.txt`, `book_2.txt`, ... in a temporary folder, sets `DATA_DIR` to it for that one run, and the folder is deleted afterwards.
 - Terminal use: `DATA_DIR=/path/to/folder python3 word-count/word_count.py` (files must be named `book_*.txt`).
+- **Uploads:** the page reads each chosen file in JavaScript, encodes it as base64 and sends everything as JSON. `file_to_text(name, data)` turns it into plain text: `.txt` is used as is, `.csv` rows are joined with spaces (`csv` module), and for `.db`/`.sqlite` the file is opened with `sqlite3`, every table is read with `SELECT *`, and each row becomes one line. The result is saved as `book_<file name>.txt` in the temporary folder, next to any pasted text. Numbers/ids in a table count as words too.
 - The Run button sends a POST request (the text can be long), so the server has `do_POST`; `do_GET` only serves the page.
 - Enter runs the task; inside the text box Enter makes a new line and Ctrl+Enter runs.
 

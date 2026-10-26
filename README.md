@@ -25,5 +25,5 @@ Each task is in its own folder, written in Python 3 (standard library only) and 
 
 `python3 gui.py` opens a page in your browser (http://localhost:8000): choose a task, press **Run**, and the output appears in the box (for Top-K, type K first). Stop it with Ctrl+C.
 
-**Custom data:** paste your own text in the box under the buttons (put a line with `---` between documents to make several files). Leave it empty to use the 5 sample files. Enter runs the task (Ctrl+Enter inside the text box).
+**Custom data:** paste your own text in the box under the buttons (put a line with `---` between documents to make several files). You can also **upload** `.txt`, `.csv` or `.db` (SQLite) files. `.csv` rows and every table row of a `.db` become lines of text (all columns are included). Leave both empty to use the 5 sample files. Enter runs the task (Ctrl+Enter inside the text box).
 From the terminal you can also point a script at your own folder of `book_*.txt` files: `DATA_DIR=/path/to/folder python3 word-count/word_count.py`.
