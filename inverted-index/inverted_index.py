@@ -6,7 +6,8 @@ import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor  # real OS threads (standard library)
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "datasets", "text-files")
+# Folder with the book_*.txt files. Set the DATA_DIR environment variable to use your own folder.
+DATA_DIR = os.environ.get("DATA_DIR") or os.path.join(os.path.dirname(__file__), "..", "datasets", "text-files")
 
 
 def mapper(file_name, line):

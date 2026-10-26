@@ -147,6 +147,13 @@ Differences from Word Count:
 
 Why a browser and not a desktop window? The Tkinter version rendered blank on this Mac because macOS's built-in Tk 8.5 does not draw most widgets, so the web version was used. It needs no installs.
 
+### Custom data
+- Each task script reads its folder from `DATA_DIR = os.environ.get("DATA_DIR") or <sample folder>`. If the environment variable `DATA_DIR` is set, the script uses that folder, otherwise the sample files.
+- In the GUI, text pasted in the "Custom data" box is split on lines containing `---`. `run_script` writes each part to `book_1.txt`, `book_2.txt`, ... in a temporary folder, sets `DATA_DIR` to it for that one run, and the folder is deleted afterwards.
+- Terminal use: `DATA_DIR=/path/to/folder python3 word-count/word_count.py` (files must be named `book_*.txt`).
+- The Run button sends a POST request (the text can be long), so the server has `do_POST`; `do_GET` only serves the page.
+- Enter runs the task; inside the text box Enter makes a new line and Ctrl+Enter runs.
+
 ## 8. The dataset and the answer-key problem
 
 - The 5 books contain **235 words** (`cat book_0*.txt | wc -w`).
